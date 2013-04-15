@@ -1,5 +1,7 @@
 package Panels;
 
+import Accounts.*;
+import Database.Database;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import javax.swing.*;
@@ -73,25 +75,24 @@ public class StartPanel extends JPanel implements ActionListener, KeyListener {
         try {
             if (e.getSource() == login) {
                 System.out.println("Login pressed");
-                for (int i = 0; i < 3; i++) {
-                    if (ItemList.managerList[i].getUserName().equals(username)) {
-                        if (ItemList.managerList[i].getPassword().equals(password)) {
+
+                for(Account user:Database.AccountList)
+                {
+                    if(user.getUserName().equals(username))
+                    {
+                        if(user.getPassword().equals(password))
+                        {
                             found = true;
-                            ItemList.chosenClientIndex = i;
-                            application.setVisible(false);
-                            ManagerPanel.main(args);
-                            break;
-                        }
-                    }
-                }
-                for (int i = 0; i < ItemList.clientSize; i++) {
-                    if (ItemList.clientList[i].getUserName().equals(username)) {
-                        if (ItemList.clientList[i].getPassword().equals(password)) {
-                            found = true;
-                            ItemList.chosenClientIndex = i;
-                            application.setVisible(false);
-                            ClientPanel.main(args);
-                            System.out.println("Password is correct");
+                            if(user.getAccountType().equals("M"))
+                            {
+                                application.setVisible(false);
+                                ManagerPanel.main(args,user);
+                            }
+                            else
+                            {
+                                application.setVisible(false);
+                                ClientPanel.main(args,(Client)user);
+                            }
                         }
                     }
                 }

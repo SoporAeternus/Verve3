@@ -3,8 +3,8 @@ package Panels;
 import java.awt.FlowLayout;
 import javax.swing.*;
 import java.awt.event.*;
-import team_14_verve3.Client;
-import team_14_verve3.ItemList;
+import Accounts.*;
+import Database.Database;
 import team_14_verve3.UserNameValidation;
 
 public class SignUpPanel extends JPanel implements ActionListener, KeyListener {
@@ -108,27 +108,21 @@ public class SignUpPanel extends JPanel implements ActionListener, KeyListener {
                 JOptionPane.showMessageDialog(null, "Please Complete All Fields");
                 return;
             }
-            for (int i = 0; i < 3; i++) {
-                if (ItemList.managerList[i].getUserName().equals(username)) {
+            for (Account user:Database.AccountList)
+            {
+                if (user.getUserName().equals(username)) 
+                {
                     JOptionPane.showMessageDialog(null, "Such username already exists!");
                     return;
                 }
             }
 
-            for (int i = 0; i < ItemList.clientSize; i++) {
-                if (ItemList.clientList[i].getUserName().equals(username)) {
-                    JOptionPane.showMessageDialog(null, "Such username already exists!");
-                    return;
-                }
-            }
-
-            ItemList.clientList[ItemList.clientSize] = new Client();
-            ItemList.clientList[ItemList.clientSize].setName(name);
-            ItemList.clientList[ItemList.clientSize].setPassword(password);
-            ItemList.clientList[ItemList.clientSize].setUserName(newUsername);
-            ItemList.clientList[ItemList.clientSize].setAddress(address);
-            ItemList.clientSize++;
-            
+            Client newClient = new Client();
+            newClient.setName(name);
+            newClient.setPassword(password);
+            newClient.setUserName(newUsername);
+            newClient.setAddress(address);
+            Database.AccountList.add(newClient);
             JOptionPane.showMessageDialog(null, "Congratulations, You can now Log In");
             application.setVisible(false);
             StartPanel.main(args);

@@ -1,5 +1,8 @@
 package Panels;
 
+import Database.Database;
+import Products.*;
+import Accounts.*;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
@@ -11,7 +14,7 @@ public class ManagerPanel extends JPanel implements ActionListener, ItemListener
     public static JFrame application;
     public static String[] args;
     private JLabel welcomeLabel;
-
+    private static Account currentManager;
     private JPanel output = new JPanel(new BorderLayout());
             
     private JButton home = new JButton("Home");
@@ -39,9 +42,9 @@ public class ManagerPanel extends JPanel implements ActionListener, ItemListener
     private GridBagLayout layout;
     private GridBagConstraints constraints;
     
-    public ManagerPanel() {
+    public ManagerPanel(Account user) {
         welcomeLabel = new JLabel("Welcome "
-                + ItemList.managerList[ItemList.chosenClientIndex].getName() + "!");
+                +user.getName() + "!");
         add(welcomeLabel);
         
         layout = new GridBagLayout();
@@ -261,9 +264,77 @@ public class ManagerPanel extends JPanel implements ActionListener, ItemListener
         
     }
 
-    public static void main(String[] args) {
+    public class InfoPanel extends JPanel
+    {  
+        private JTable table;
+        private Object[][] data;
+        private String[] columnNames;
+        
+        public InfoPanel()
+        {
+            JPanel header = new JPanel();       
+            header.add(new JLabel("Users:"));
+            add(header, BorderLayout.NORTH);
+            String[] columnNames = {"Account Type","Username","Password","Name","Address","Balance"};
+            int N = Database.AccountList.size();
+            Object[][] data = new Object[N][6];
+            for(int i = 0;i<N;i++)
+            {
+                Account user = Database.AccountList.get(i);
+                data[i][0] = user.getAccountType();
+                data[i][1] = user.getUserName();
+                data[i][2] = user.getPassword();
+                data[i][3] = user.getName();
+                data[i][4] = user.getAddress();
+                if(user.getAccountType().equals("C"))
+                {
+                    Client c = (Client) user;
+                    data[i][5] = c.getBalance();
+                }
+                else
+                {
+                    data[i][5] = "N/A";
+                }    
+            }
+                table = new JTable(data, columnNames); 
+                table.getTableHeader().setReorderingAllowed(false);
+                JScrollPane scrollPane = new JScrollPane(table);   
+                this.add(scrollPane);
+        }
+    }
+    
+    public class OrderPanel extends JPanel
+    {  
+        private JTable table;
+        private Object[][] data;
+        private String[] columnNames;
+        
+        public OrderPanel()
+        {
+            JPanel header = new JPanel();       
+            header.add(new JLabel("Users:"));
+            add(header, BorderLayout.NORTH);
+            String[] columnNames = {"Client Name","Item ID","Quantity"};
+            int N = Database.Orders.size();
+            Object[][] data = new Object[N][3];
+            for(int i = 0;i<N;i++)
+            {
+                Order o = Database.Orders.get(i);
+                data[i][0] = o.getName();
+                data[i][1] = o.getPID();
+                data[i][2] = o.getQuantity();  
+            }
+                table = new JTable(data, columnNames); 
+                table.getTableHeader().setReorderingAllowed(false);
+                JScrollPane scrollPane = new JScrollPane(table);   
+                this.add(scrollPane);
+        }
+    }
+    
+    public static void main(String[] args,Account user) {
         application = new JFrame();
-        ManagerPanel managerPanel = new ManagerPanel();
+        currentManager = user;
+        ManagerPanel managerPanel = new ManagerPanel(user);
         application.setTitle("verve3 Manager Panel");
         application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         application.setSize(800, 600);
@@ -296,7 +367,7 @@ public class ManagerPanel extends JPanel implements ActionListener, ItemListener
         if (e.getSource() == report)
         {
             output.removeAll();
-            output.add(reportPanel);
+            output.add(new OrderPanel());
             output.revalidate();
             output.repaint();
         }
@@ -304,7 +375,7 @@ public class ManagerPanel extends JPanel implements ActionListener, ItemListener
         if (e.getSource() == customerInfo)
         {
             output.removeAll();
-            output.add(customerInfoPanel);
+            output.add(new InfoPanel());
             output.revalidate();
             output.repaint();
         }
@@ -336,18 +407,14 @@ public class ManagerPanel extends JPanel implements ActionListener, ItemListener
              
             if (chosenType.equals("Book"))
             {
+                Book newBook = new Book();
+                newBook.setTitle(title.getText());
+                newBook.setAuthor(author.getText());
+                newBook.setPrice(Double.parseDouble(price.getText()));
+                Database.bookList.add(newBook);
                 
-                int i = 0;
-                while (ItemList.bookList[i] != null)
-                    i++;    // looking for a null book in the array
-                
-                ItemList.bookList[i] = new Book();
-                ItemList.bookList[i].setTitle(title.getText());
-                ItemList.bookList[i].setAuthor(author.getText());
-                ItemList.bookList[i].setPrice(Double.parseDouble(price.getText()));
-                
-                JOptionPane.showMessageDialog(null, "You succesfully created a new music!");
-                
+                JOptionPane.showMessageDialog(null, "You succesfully added a new Book!");
+                productID.setText(Item.generateID());
                 title.setText("");
                 producer.setText("");
                 artist.setText("");
@@ -356,19 +423,14 @@ public class ManagerPanel extends JPanel implements ActionListener, ItemListener
             }
             
             if (chosenType.equals("DVD"))
-            {
-                
-                int i = 0;
-                while (ItemList.DVDList[i] != null)
-                    i++;    // looking for a null book in the array
-                
-                ItemList.DVDList[i] = new DVD();
-                ItemList.DVDList[i].setTitle(title.getText());
-                ItemList.DVDList[i].setProducer(producer.getText());
-                ItemList.DVDList[i].setPrice(Double.parseDouble(price.getText()));
-                
-                JOptionPane.showMessageDialog(null, "You succesfully created a new DVD!");
-                
+            {        
+                DVD newDVD= new DVD();
+                newDVD.setTitle(title.getText());
+                newDVD.setProducer(producer.getText());
+                newDVD.setPrice(Double.parseDouble(price.getText()));
+                Database.DVDList.add(newDVD);
+                JOptionPane.showMessageDialog(null, "You succesfully added a new DVD!");
+                productID.setText(Item.generateID());
                 title.setText("");
                 producer.setText("");
                 artist.setText("");
@@ -378,18 +440,15 @@ public class ManagerPanel extends JPanel implements ActionListener, ItemListener
             
             if (chosenType.equals("Music"))
             {
+ 
+                Music newMusic = new Music();
+                newMusic.setTitle(title.getText());
+                newMusic.setArtist(artist.getText());
+                newMusic.setPrice(Double.parseDouble(price.getText()));
+                Database.musicList.add(newMusic);
                 
-                int i = 0;
-                while (ItemList.musicList[i] != null)
-                    i++;    // looking for a null book in the array
-                
-                ItemList.musicList[i] = new Music();
-                ItemList.musicList[i].setTitle(title.getText());
-                ItemList.musicList[i].setArtist(artist.getText());
-                ItemList.musicList[i].setPrice(Double.parseDouble(price.getText()));
-                
-                JOptionPane.showMessageDialog(null, "You succesfully created a new Music!");
-                
+                JOptionPane.showMessageDialog(null, "You succesfully added a new Music!");
+                productID.setText(Item.generateID());
                 title.setText("");
                 producer.setText("");
                 artist.setText("");

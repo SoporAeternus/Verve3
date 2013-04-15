@@ -1,4 +1,4 @@
-package team_14_verve3;
+package Products;
 
 import java.util.Date;
 import java.lang.Math;
@@ -20,27 +20,27 @@ import java.lang.Math;
  */
 public abstract class Item {
 
-    protected String productID;           // used for search, 6-digit
-    protected String title;               // name of an Item
-    protected String genre;               // genre of Item
-    protected double price;               // price of Item
-    protected double rating;              // rating of Item
-    protected int quantitySold;           // Quantity Sold of Item
-    protected Date publishDate;           // Publish Date of Item
+    protected String PRODUCT_ID;           // used for search, 6-digit
+    protected String TITLE;               // name of an Item
+    protected String GENRE;               // genre of Item
+    protected double PRICE;               // price of Item
+    protected double RATING;              // rating of Item
+    protected int QUANTITY_SOLD;           // Quantity Sold of Item
+    protected Date PUBLISH_DATE;         // Publish Date of Item
 
     // default constructor
     public Item() {
-        productID = generateID();             // randomly generated
-        while (!isProductID_valid(productID)) // need to check if such ID already exists
+        PRODUCT_ID = generateID();             // randomly generated
+        while (!isProductID_valid(PRODUCT_ID)) // need to check if such ID already exists
         {
-            productID = generateID();         // if not valid, generates ID again
+            PRODUCT_ID = generateID();         // if not valid, generates ID again
         }
-        title = "";
-        genre = "";
-        price = 0.0;
-        rating = 0.0;
-        quantitySold = 0;
-        publishDate = new Date(113, 1, 1);    // default date, that is 1/1/2013
+        TITLE = "";
+        GENRE = "";
+        PRICE = 0.0;
+        RATING = 0.0;
+        QUANTITY_SOLD = 0;
+        PUBLISH_DATE = new Date(113, 1, 1);    // default date, that is 1/1/2013
     }
 
     /**
@@ -83,7 +83,7 @@ public abstract class Item {
     public void setTitle(String title) {
         // PRE: title contains value
         // POST: assigns title
-        this.title = title;
+        this.TITLE = title;
     }
 
     /**
@@ -94,7 +94,7 @@ public abstract class Item {
     public void setGenre(String genre) {
         // PRE: genre contains value
         // POST: assigns genre
-        this.genre = genre;
+        this.GENRE = genre;
     }
 
     /**
@@ -105,7 +105,7 @@ public abstract class Item {
     public void setPrice(double price) {
         // PRE: price >= 0
         // POST: assigns price
-        this.price = price;
+        this.PRICE = price;
     }
 
     /**
@@ -116,53 +116,54 @@ public abstract class Item {
     public void setPublishDate(Date publishDate) {
         // PRE: publishDate is valid
         // POST: assigns publishDate
-        this.publishDate.setYear(publishDate.getYear() - 1900);
-        this.publishDate.setMonth(publishDate.getMonth());
-        this.publishDate.setDate(publishDate.getDate());
+        this.PUBLISH_DATE.setYear(publishDate.getYear() - 1900);
+        this.PUBLISH_DATE.setMonth(publishDate.getMonth());
+        this.PUBLISH_DATE.setDate(publishDate.getDate());
     }
 
-    public void resetRating() {
+    public void resetRating(double newRating) 
+    {
         // POST: reset the rating of an Item to 0
-        rating = 0;
+        RATING =newRating;
     }
 
     public String getTitle() {
         // POST: returns title of Item
-        return title;
+        return TITLE;
     }
 
     public String getProductID() {
         // POST: returns productID of Item
-        return productID;
+        return PRODUCT_ID;
     }
 
     public String getGenre() {
         // POST: returns genre of Item
-        return genre;
+        return GENRE;
     }
 
     public double getPrice() {
         // POST: returns price of Item
-        return price;
+        return PRICE;
     }
 
     public double getRating() {
         // POST: returns rating of Item
-        return rating;
+        return RATING;
     }
 
     public int getQuantitySold() {
         // POST: returns quantity sold of Item
-        return quantitySold;
+        return QUANTITY_SOLD;
     }
 
-    public void incrementRanking() {
+    public void incrementRanking(int num) {
         // POST: function called that increments by one when one more quantity is sold
-        quantitySold++;
+        QUANTITY_SOLD += num;
     }
 
     public String getDate() {
         // POST: returns the publish date of Item
-        return "Publish Date: " + publishDate.getMonth() + "/" + publishDate.getDate() + "/" + publishDate.getYear() + "\n";
+        return "Publish Date: " + PUBLISH_DATE.getMonth() + "/" + PUBLISH_DATE.getDate() + "/" + PUBLISH_DATE.getYear() + "\n";
     }
 }

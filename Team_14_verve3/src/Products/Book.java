@@ -1,4 +1,4 @@
-package team_14_verve3;
+package Products;
 
 /**
  * Name: Alikhan Amandyk, Varun Patel, Di Wang Section: [Alikhan and Varun -
@@ -17,21 +17,26 @@ package team_14_verve3;
  */
 public class Book extends Item {
 
-    private String author;       // book author
+    private String AUTHOR;       // book author
 
     // default constructor
     public Book() {
         super();
-        author = "";
+        AUTHOR = "";
     }
-
+    
+    public Book(String[] newBook)
+    {
+        super();
+    }
+    
     /**
      * Set function acts as Init Constructor to Set Author of Book
      *
      * @param author type string- assigned to private data member author
      */
     public void setAuthor(String author) {
-        this.author = author;
+        this.AUTHOR = author;
     }
 
     /**
@@ -39,6 +44,6 @@ public class Book extends Item {
      *
      */
     public String getAuthor() {
-        return author;
+        return AUTHOR;
     }
 }

@@ -1,4 +1,4 @@
-package team_14_verve3;
+package Products;
 
 /**
  * Name: Alikhan Amandyk, Varun Patel, Di Wang Section: [Alikhan and Varun -
@@ -17,29 +17,25 @@ package team_14_verve3;
  */
 public class Music extends Item {
 
-    private String artist;               // artist of CD music
-    private String producer;             // producer of CD music
-    private String filename;             // file name that allows preview of music when not bought
+    private String ARTIST;               // artist of CD music
+    private String PRODUCER;             // producer of CD music
+    private String FILENAME;             // file name that allows preview of music when not bought
     // and access to full file when music is bought
     // default constructor
 
-    public Music() {
+    public Music() 
+    {
         super();
-        artist = "";
-        producer = "";
-        filename = "";
+        ARTIST = "";
+        PRODUCER = "";
+        FILENAME = "";
     }
 
-    /**
-     * Set function acts as Init Constructor to Set Artist of Music
-     *
-     * @param artist type string- assigned to private data member artist using
-     * this operator
-     */
-    public void setArtist(String artist) {
-        this.artist = artist;
+    public Music(String[] newMusic)
+    {
+        super();
     }
-
+    
     /**
      * Set function acts as Init Constructor to Set Producer of Music
      *
@@ -47,7 +43,12 @@ public class Music extends Item {
      * using this operator
      */
     public void setProducer(String producer) {
-        this.producer = producer;
+        this.PRODUCER = producer;
+    }
+    
+    public void setArtist(String artist)
+    {
+        this.ARTIST = artist;
     }
 
     /**
@@ -58,16 +59,16 @@ public class Music extends Item {
      * using this operator
      */
     public void setFilename(String filename) {
-        this.filename = filename;
+        this.FILENAME = filename;
     }
 
     public String getArtist() {
         // POST: returns the name of artist of Song
-        return artist;
+        return ARTIST;
     }
 
     public String getProducer() {
         // POST: returns the producer of the Song
-        return producer;
+        return PRODUCER;
     }
 }

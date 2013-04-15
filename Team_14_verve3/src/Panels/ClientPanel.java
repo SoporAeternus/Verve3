@@ -1,13 +1,20 @@
 package Panels;
 
+import Database.Database;
+import Accounts.*;
+import Products.*;
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.table.*;
 import java.awt.event.*;
+import java.util.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import team_14_verve3.*;
 
 public class ClientPanel extends JApplet implements ActionListener{
 
+    private static Client currentUser;
     public static JFrame application;
     public static String[] args;
     private JLabel welcomeLabel;
@@ -20,7 +27,6 @@ public class ClientPanel extends JApplet implements ActionListener{
     private JButton mgmt = new JButton("My Account");
     private JButton logout = new JButton("Logout");
 
-    private JPanel homePanel = new JPanel(new BorderLayout());
     private JPanel cartPanel = new JPanel();
     private JPanel searchPanel = new JPanel();
     private JPanel mgmtPanel = new JPanel();
@@ -29,17 +35,17 @@ public class ClientPanel extends JApplet implements ActionListener{
     private JButton musicButton = new JButton("Music");
     private JButton dvdButton = new JButton("DVD");
     private JButton bookButton = new JButton("Book");
-    private DefaultTableModel model = new DefaultTableModel(1,5);
-    private JTable items = new JTable(model);
-            
+    private JButton purchaseButton = new JButton("Purchase");
     
     private GridBagLayout layout;
     private GridBagConstraints constraints;
     
+    private ProductPanel productPanel;
 
-    public ClientPanel() {
+    public ClientPanel(Client client) {
+        currentUser = client;
         welcomeLabel = new JLabel("Welcome "
-                + ItemList.clientList[ItemList.chosenClientIndex].getName() + "!");
+                + client.getName() + "!");
         
         
         layout = new GridBagLayout();
@@ -115,7 +121,7 @@ public class ClientPanel extends JApplet implements ActionListener{
         remove(panels[5]);
         remove(panels[6]);
         
-        
+        productPanel = new ProductPanel();
         // the panel with label
         constraints.gridx = 2;
         constraints.gridy = 0;
@@ -127,25 +133,6 @@ public class ClientPanel extends JApplet implements ActionListener{
         add(panels[4]);
         
         constraints.fill = GridBagConstraints.BOTH;
-        
-        /*
-        for (int i = 1; i < 15; i++)
-        {
-            constraints.gridx = 0;
-            constraints.gridy = i;
-            constraints.gridwidth = 1;
-            constraints.gridheight = 1;
-            layout.setConstraints(panel[10+i], constraints);
-            add(panel[10+i]);
-        }
-        
-        constraints.gridx = 0;
-        constraints.gridy = 1;
-        constraints.gridwidth = 1;
-        constraints.gridheight = 13;
-        layout.setConstraints(panel[10], constraints);
-        add(panel[10]);
-        */
             
         home.addActionListener(this);
         cart.addActionListener(this);
@@ -205,81 +192,170 @@ public class ClientPanel extends JApplet implements ActionListener{
         searchPanel.add(new JLabel("Search"));
         cartPanel.add(new JLabel("Shopping Cart"));
         mgmtPanel.add(new JLabel("Management"));
-        
-        // homePanel defining
-        //GridLayout homePanelLayout = new GridLayout(3,1);
-        //homePanel.setLayout(homePanelLayout);
-        
-        /*
+       
         musicButton.addActionListener(this);
         dvdButton.addActionListener(this);
         bookButton.addActionListener(this);
-        
-        JPanel hp_1 = new JPanel();
-        
-        hp_1.add(new JLabel("Select what type of item you want to browse:"));
-        hp_1.add(musicButton);
-        hp_1.add(dvdButton);
-        hp_1.add(bookButton);
+        purchaseButton.addActionListener(this);
         
         
-        model.setValueAt("PID", 0, 0);
-        model.setValueAt("Title", 0, 1);
-        model.setValueAt("Author", 0, 2);
-        model.setValueAt("Rating", 0, 3);
-        model.setValueAt("Price", 0, 4);
-        
-        homePanel.add(hp_1, BorderLayout.NORTH);
-        
-        JScrollPane scrollPane = new JScrollPane(items);
-        homePanel.add(scrollPane, BorderLayout.CENTER);
-        */
-        
-        
-        
-        JTabbedPane tabbedPane = new JTabbedPane();
-        JPanel musicPanel = new JPanel();
-        
-        model.setValueAt("PID", 0, 0);
-        model.setValueAt("Title", 0, 1);
-        model.setValueAt("Author", 0, 2);
-        model.setValueAt("Rating", 0, 3);
-        model.setValueAt("Price", 0, 4);
-        JScrollPane scrollPane = new JScrollPane(items);
-        musicPanel.add(scrollPane, BorderLayout.CENTER);
-        model.setValueAt("Artist", 0, 2);
-            while (model.getRowCount() > 1) // clean the table from previous items
-            {
-                model.removeRow(1);
-            }
-            
-            
-            for (int i = 0; ItemList.musicList[i] != null; i++)
-            {
-                Object[] thisItem = new Object[]
-                {ItemList.musicList[i].getProductID(),
-                 ItemList.musicList[i].getTitle(),
-                 ItemList.musicList[i].getArtist(),
-                 ItemList.musicList[i].getPrice(),
-                 ItemList.musicList[i].getRating()};
-                model.addRow(thisItem);
-            }
-            
-            
-        JPanel DVDPanel = new JPanel();
-        JPanel bookPanel = new JPanel();
-        
-        tabbedPane.add("Music", musicPanel);
-        tabbedPane.add("DVD", DVDPanel);
-        tabbedPane.add("Book", bookPanel);
-        
-        
-        
-        homePanel.add(tabbedPane);
-        
-        output.add(homePanel);
+        output.add(new ProductPanel());
     }
 
+    public class OrderPanel extends JPanel
+    {  
+        private JTable table;
+        private Object[][] data;
+        private String[] columnNames;
+        
+        public OrderPanel()
+        {
+            JPanel header = new JPanel();       
+            header.add(new JLabel("Users:"));
+            add(header, BorderLayout.NORTH);
+            String[] columnNames = {"Client Name","Item ID","Quantity"};
+            int N = Database.Orders.size();
+            Object[][] data = new Object[N][3];
+            for(int i = 0;i<N;i++)
+            {
+                Order o = Database.Orders.get(i);
+                data[i][0] = o.getName();
+                data[i][1] = o.getPID();
+                data[i][2] = o.getQuantity();  
+            }
+                table = new JTable(data, columnNames); 
+                table.getTableHeader().setReorderingAllowed(false);
+                JScrollPane scrollPane = new JScrollPane(table);   
+                this.add(scrollPane);
+        }
+    }
+    
+    public class ProductPanel extends JPanel implements TableModelListener
+    {  
+        private JTable table;
+        private Object[][] data = {};
+        private String[] columnNames = {};
+        private int N;
+        
+        public ProductPanel()
+        {
+            table = new JTable();
+            table = new JTable(new DefaultTableModel());
+            table.getModel().addTableModelListener(this);
+            JPanel header = new JPanel();       
+            header.add(new JLabel("Select what type of item you want to browse:"));
+            header.add(musicButton);          
+            header.add(dvdButton);
+            header.add(bookButton);
+            header.add(purchaseButton);
+            add(header, BorderLayout.NORTH);
+        }
+        public ProductPanel(String type)
+        {
+            table = new JTable(new DefaultTableModel());
+            table.getModel().addTableModelListener(this);
+            JPanel header = new JPanel();       
+            header.add(new JLabel("Select what type of item you want to browse:"));
+            header.add(musicButton);          
+            header.add(dvdButton);
+            header.add(bookButton);
+            header.add(purchaseButton);
+            add(header, BorderLayout.NORTH);
+            if(type.equals("Music"))
+            {
+                String[] columnNames = {"PID","Title","Artist","Rating","Price","Quantity"};
+                N = Database.musicList.size();
+                data = new Object[N][6];
+                for(int i = 0;i<N;i++)
+                {
+                    Music m = Database.musicList.get(i);
+                    data[i][0] = m.getProductID();
+                    data[i][1] = m.getTitle();
+                    data[i][2] = m.getArtist();
+                    data[i][3] = m.getRating();
+                    data[i][4] = m.getPrice();
+                }
+                table = new JTable(data, columnNames); 
+                table.getTableHeader().setReorderingAllowed(false);
+                JScrollPane scrollPane = new JScrollPane(table);   
+                this.add(scrollPane);
+            }
+            if(type.equals("DVD"))
+            {
+                String[] columnNames = {"PID","Title","Director","Rating","Price","Quantity"};
+                Object[][] data = {};
+                table = new JTable(data, columnNames); 
+                table.getTableHeader().setReorderingAllowed(false);
+                JScrollPane scrollPane = new JScrollPane(table);   
+                this.add(scrollPane);
+            }
+            if(type.equals("Book"))
+            {
+                String[] columnNames = {"PID","Title","Arthor","Rating","Price","Quantity"};
+                Object[][] data = {};
+                table = new JTable(data, columnNames); 
+                table.getTableHeader().setReorderingAllowed(false);
+                JScrollPane scrollPane = new JScrollPane(table);   
+                this.add(scrollPane);
+            }
+        }
+        void checkOut()
+        {
+            double totalPrice = 0;           
+            if(data.length == 0)
+            {
+                JOptionPane.showMessageDialog(null, "There is nothing selected here");
+            }
+            else
+            {
+                 for(int i = 0; i < N;i++)
+                {
+                    System.out.println(i+((String)data[i][5]));
+                   String q = table.getModel().getValueAt(i, 5).toString();
+                   Double p = (Double)data[i][4];
+                   System.out.println(q+ " "+p);
+                   totalPrice += p*Integer.parseInt(q);
+                }
+                if(totalPrice > currentUser.getBalance())
+                {
+                    JOptionPane.showMessageDialog(null, "Insufficient Balance\n"
+                            + "Need: "+totalPrice+"\n Have: "+currentUser.getBalance());
+                }
+                else
+                {
+                    for(int i = 0; i < N;i++)
+                    {
+                        String q = (String)data[i][5];
+                        if(Integer.parseInt(q) > 0)
+                        {
+                            String name = currentUser.getName();
+                            String PID = Database.musicList.get(i).getProductID();
+                            int Quantity = Integer.parseInt(q);
+                            Database.Orders.add(new Order(name,PID,Quantity));
+                        }
+                    }
+                    double before = currentUser.getBalance();
+                    currentUser.buy(totalPrice);
+                    double after = currentUser.getBalance();
+                    JOptionPane.showMessageDialog(null, "Successful!\n"
+                            + "Balance Before: "+before+"\n After: "+currentUser.getBalance());
+                }
+            }
+           
+        }
+
+        @Override
+        public void tableChanged(TableModelEvent e) 
+        {
+            int row = e.getFirstRow();
+            int column = e.getColumn();
+            TableModel model = (TableModel)e.getSource();
+            String columnName = model.getColumnName(column);
+            Object data = model.getValueAt(row, column);
+            System.out.println(columnName);
+        }
+    }
+    
     @Override
     public void init() {
         
@@ -290,9 +366,9 @@ public class ClientPanel extends JApplet implements ActionListener{
      { 
          super.paint(g); 
      }
-    public static void main(String[] args) {
+    public static void main(String[] args,Client user) {
         application = new JFrame();
-        ClientPanel clientPanel = new ClientPanel();
+        ClientPanel clientPanel = new ClientPanel(user);
         application.setTitle("verve3 Client Panel");
         application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         application.setSize(800, 600);
@@ -307,7 +383,7 @@ public class ClientPanel extends JApplet implements ActionListener{
         if (e.getSource() == home)
         {
             output.removeAll();
-            output.add(homePanel);
+            output.add(new ProductPanel());
             output.revalidate();
             output.repaint();
         }
@@ -331,7 +407,7 @@ public class ClientPanel extends JApplet implements ActionListener{
         if (e.getSource() == mgmt)
         {
             output.removeAll();
-            output.add(mgmtPanel);
+            output.add(new OrderPanel());
             output.revalidate();
             output.repaint();
         }
@@ -345,67 +421,39 @@ public class ClientPanel extends JApplet implements ActionListener{
         // defining behavior for buttons from homePanel
         if (e.getSource() == musicButton)
         {
-            model.setValueAt("Artist", 0, 2);
-            while (model.getRowCount() > 1) // clean the table from previous items
-            {
-                model.removeRow(1);
-            }
-            
-            
-            for (int i = 0; ItemList.musicList[i] != null; i++)
-            {
-                Object[] thisItem = new Object[]
-                {ItemList.musicList[i].getProductID(),
-                 ItemList.musicList[i].getTitle(),
-                 ItemList.musicList[i].getArtist(),
-                 ItemList.musicList[i].getPrice(),
-                 ItemList.musicList[i].getRating()};
-                model.addRow(thisItem);
-            }
-            
-            
+            output.removeAll();
+            productPanel = new ProductPanel("Music");
+            output.add(productPanel);
+            output.revalidate();
+            output.repaint();
         }
         
         if (e.getSource() == dvdButton)
         {
-            model.setValueAt("Producer", 0, 2);
-            while (model.getRowCount() > 1) // clean the table from previous items
-            {
-                model.removeRow(1);
-            }
-            
-            
-            for (int i = 0; ItemList.DVDList[i] != null; i++)
-            {
-                Object[] thisItem = new Object[]
-                {ItemList.DVDList[i].getProductID(),
-                 ItemList.DVDList[i].getTitle(),
-                 ItemList.DVDList[i].getProducer(),
-                 ItemList.DVDList[i].getPrice(),
-                 ItemList.DVDList[i].getRating()};
-                model.addRow(thisItem);
-            }
+            output.removeAll();
+            productPanel = new ProductPanel("DVD");
+            output.add(productPanel);
+            output.revalidate();
+            output.repaint();
         }
         
         if (e.getSource() == bookButton)
         {
-            model.setValueAt("Author", 0, 2);
-            while (model.getRowCount() > 1) // clean the table from previous items
-            {
-                model.removeRow(1);
-            }
-            
-            
-            for (int i = 0; ItemList.bookList[i] != null; i++)
-            {
-                Object[] thisItem = new Object[]
-                {ItemList.bookList[i].getProductID(),
-                 ItemList.bookList[i].getTitle(),
-                 ItemList.bookList[i].getAuthor(),
-                 ItemList.bookList[i].getRating(),
-                 ItemList.bookList[i].getPrice()};
-                model.addRow(thisItem);
-            }
+            output.removeAll();
+            productPanel = new ProductPanel("Book");
+            output.add(productPanel);
+            output.revalidate();
+            output.repaint();           
+        }
+        
+        if (e.getSource() == purchaseButton)
+        {
+            productPanel.checkOut();
+            output.removeAll();
+            productPanel = new ProductPanel();
+            output.add(productPanel);
+            output.revalidate();
+            output.repaint();           
         }
     }
 }

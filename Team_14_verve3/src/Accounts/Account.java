@@ -1,6 +1,7 @@
-package team_14_verve3;
+package Accounts;
 
 import java.util.Date;
+import team_14_verve3.UserNameValidation;
 
 /**
  * Name: Alikhan Amandyk, Varun Patel, Di Wang Section: [Alikhan and Varun -
@@ -17,7 +18,7 @@ import java.util.Date;
  * @author Di Wang
  * @version 1.0 02/15/2013
  */
-public abstract class AccountType {
+public abstract class Account {
     // this class is going to be inherited by Client and Manager classes
 
     protected String name;           // name of account holder
@@ -28,9 +29,9 @@ public abstract class AccountType {
     protected String accountID;      // Account ID - randomly generated number [8 digit]
     protected UserNameValidation userName;  // necessary to check if username is correct
     public static boolean correctEmail = true;  // check if the email is true
-
+    private String ACCOUNT_TYPE;
     // default constructor
-    public AccountType() {
+    public Account() {
         // default constructor, all fields are set to blank
         name = "";
         address = "";
@@ -43,7 +44,24 @@ public abstract class AccountType {
         }
         password = "";
     }
-
+    public Account(String[] user)
+    {
+        this.setAccountType(user[0]);
+        this.setUserName(new UserNameValidation(user[1])); 
+        this.setPassword(user[2]);
+        this.setName(user[3]);
+        this.setAddress(user[4]);
+        int Y = Integer.parseInt(user[5]);
+        int M = Integer.parseInt(user[6]);
+        int D = Integer.parseInt(user[7]);
+        this.setDOB(new Date(Y,M,D));
+        
+    }
+    public void setAccountType(String accountType)
+    {
+        this.ACCOUNT_TYPE = accountType;
+    }
+    
     /**
      * Set function acts as Init Constructor to Set userName
      *
@@ -159,7 +177,17 @@ public abstract class AccountType {
     public String getUserName() {
         return username;
     }
-
+    
+    public String getAccountType()
+    {
+        return ACCOUNT_TYPE;
+    }
+    
+    public String getAddress()
+    {
+        return this.address;
+    }
+    
     /**
      * toString method that returns the Credentials of the User Account
      */

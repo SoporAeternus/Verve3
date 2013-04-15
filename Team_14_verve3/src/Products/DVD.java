@@ -1,4 +1,4 @@
-package team_14_verve3;
+package Products;
 
 /**
  * Name: Alikhan Amandyk, Varun Patel, Di Wang Section: [Alikhan and Varun -
@@ -17,16 +17,21 @@ package team_14_verve3;
  */
 public class DVD extends Item {
 
-    private String director;      // director of DVD
-    private String producer;      // producer of DVD
+    private String DIRECTOR;      // director of DVD
+    private String PRODUCER;      // producer of DVD
 
     // default constructor  
-    public DVD() {
+    public DVD() 
+    {
         super();
-        director = "";
-        producer = "";
+        DIRECTOR = "";
+        PRODUCER= "";
     }
 
+    public DVD(String[] newDVD)
+    {   
+        super();
+    }
     /**
      * Set function acts as Init Constructor to Set Director of DVD
      *
@@ -34,9 +39,9 @@ public class DVD extends Item {
      * using this operator
      */
     public void setDirector(String director) {
-        this.director = director;
+        this.DIRECTOR = director;
     }
-
+        
     /**
      * Set function acts as Init Constructor to Set Producer of DVD
      *
@@ -44,16 +49,16 @@ public class DVD extends Item {
      * using this operator
      */
     public void setProducer(String producer) {
-        this.producer = producer;
+        this.PRODUCER = producer;
     }
 
     public String getDirector() {
         // POST: returns the director of the DVD
-        return director;
+        return DIRECTOR;
     }
 
     public String getProducer() {
         // POST: returns the producer of the DVD
-        return producer;
+        return PRODUCER;
     }
 }

@@ -1,6 +1,7 @@
 package team_14_verve3;
 
-import java.util.Hashtable;
+import java.util.*;
+import Products.*;
 
 /**
  * Name: Alikhan Amandyk, Varun Patel, Di Wang Section: [Alikhan and Varun -
@@ -23,7 +24,7 @@ public class ShoppingCart {
     public static final int ZERO = 0;           // used so hardcoding is avoided and for security reasons
     // first parameter corresponds to productID, 2nd paramater - quantity
     private Hashtable<String, Integer> shoppingCart;
-
+    
     // Default Constructor
     public ShoppingCart() {
         shoppingCart = new Hashtable<String, Integer>();
@@ -34,16 +35,10 @@ public class ShoppingCart {
      *
      * @param itemID type string- will be the key in the HashTable
      */
-    public void addItemToCart(String itemID) {
+    public void addItemToCart(String itemID,int Quantity) {
         // adds certain item using itemID
         // PRE: itemID to be correct
-        if (shoppingCart.containsKey(itemID)) {
-            int quantity = shoppingCart.get(itemID);
-            quantity++;
-            shoppingCart.put(itemID, quantity);
-        } else {    // if itemID doesn't exist in cart, that's a new item then!
-            shoppingCart.put(itemID, ONE);
-        }
+        shoppingCart.put(itemID, Quantity);
     }
 
     /**

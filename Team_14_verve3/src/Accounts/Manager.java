@@ -1,4 +1,8 @@
-package team_14_verve3;
+package Accounts;
+
+import Database.*;
+import Products.*;
+import team_14_verve3.UserNameValidation;
 
 /**
  * Name: Alikhan Amandyk, Varun Patel, Di Wang Section: [Alikhan and Varun -
@@ -8,52 +12,58 @@ package team_14_verve3;
 
 /*
  * This abstract class contains various methods for managing the Manager user
- * This class extends the abstract AccountType class
+ * This class extends the abstract Account class
  * 
  * @author Alikhan Amandyk
  * @author Varun Patel
  * @author Di Wang
  * @version 1.0 02/15/2013
  */
-public class Manager extends AccountType {
+public class Manager extends Account {
 
-    public static final int MAX_SIZE = 50;
-    private Music music = new Music();
-    private DVD dvd = new DVD();
-    private Book book = new Book();
-    private Client client = new Client();
-    private String[] testString = new String[MAX_SIZE];
+    //public static final int MAX_SIZE = 50;
+    //private Music music = new Music();
+    //private DVD dvd = new DVD();
+   // private Book book = new Book();
+    //private Client client = new Client();
+   // private String[] testString = new String[MAX_SIZE];
 
     // default Constructor
-    public Manager() {
+    public Manager()
+    {
         super();
     }
-
+    
+    public Manager(String[] user)
+    {
+        super(user);
+    }
+/*
     public void AddContent(String itemKind, String titleOfItem) {
         boolean isValid = isItemKindValid(itemKind);
         if (isValid == true) {
             itemKind = itemKind.toLowerCase();
             if (itemKind.equals("music")) {
-                for (int i = 0; i < ItemList.musicList.length; i++) {
-                    if (ItemList.musicList[i] == null) {
-                        ItemList.musicList[i] = music;
-                        ItemList.musicList[i].setTitle(titleOfItem);
+                for (int i = 0; i < Database.musicList.length; i++) {
+                    if (Database.musicList[i] == null) {
+                        Database.musicList[i] = music;
+                        Database.musicList[i].setTitle(titleOfItem);
                         break;
                     }
                 }
             } else if (itemKind.equals("book")) {
-                for (int i = 0; i < ItemList.DVDList.length; i++) {
-                    if (ItemList.DVDList[i] == null) {
-                        ItemList.DVDList[i] = dvd;
-                        ItemList.DVDList[i].setTitle(titleOfItem);
+                for (int i = 0; i < Database.DVDList.length; i++) {
+                    if (Database.DVDList[i] == null) {
+                        Database.DVDList[i] = dvd;
+                        Database.DVDList[i].setTitle(titleOfItem);
                         break;
                     }
                 }
             } else {
-                for (int i = 0; i < ItemList.bookList.length; i++) {
-                    if (ItemList.bookList[i] == null) {
-                        ItemList.bookList[i] = book;
-                        ItemList.bookList[i].setTitle(titleOfItem);
+                for (int i = 0; i < Database.bookList.length; i++) {
+                    if (Database.bookList[i] == null) {
+                        Database.bookList[i] = book;
+                        Database.bookList[i].setTitle(titleOfItem);
                         break;
                     }
                 }
@@ -61,7 +71,7 @@ public class Manager extends AccountType {
         } else {
             System.out.print("Invalid Type of Item entered, Please Check Item Type ");
         }
-    }
+    }*/
 
     private boolean isItemKindValid(String item) {
         String[] itemKind = {"Music", "music", "MUSIC", "DVD",
@@ -73,22 +83,22 @@ public class Manager extends AccountType {
         }
         return false;
     }
-
+/*
     public void retrieveCustomerInformation(String userNameSearch) {
         String testString;
-        for (int i = 0; i < ItemList.clientList.length; i++) {
-            if (ItemList.clientList[i] == null) {
+        for (int i = 0; i < Database.clientList.length; i++) {
+            if (Database.clientList[i] == null) {
                 System.out.print("No such Client User Name Exists");
                 break;
             } else {
-                testString = ItemList.clientList[i].getUserName();
+                testString = Database.clientList[i].getUserName();
                 if (testString.equals(userNameSearch)) {
                     System.out.println("Username " + userNameSearch + " is found:");
-                    System.out.println(ItemList.clientList[i].toString());
+                    System.out.println(Database.clientList[i].toString());
                 }
             }
         }
-    }
+    }*/
 
     // will be implemented in the GUI phase
     @Override
