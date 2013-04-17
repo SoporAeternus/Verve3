@@ -15,6 +15,9 @@ import team_14_verve3.*;
 public class ClientPanel extends JApplet implements ActionListener{
 
     private static Client currentUser;
+    private JButton deposit = new JButton("Deposit!");
+    private JTextField amount = new JTextField(10);
+    private static JLabel curBalance;
     public static JFrame application;
     public static String[] args;
     private JLabel welcomeLabel;
@@ -202,7 +205,7 @@ public class ClientPanel extends JApplet implements ActionListener{
         output.add(new ProductPanel());
     }
 
-    public class OrderPanel extends JPanel
+    public class OrderPanel extends JPanel implements ActionListener
     {  
         private JTable table;
         private Object[][] data;
@@ -210,6 +213,7 @@ public class ClientPanel extends JApplet implements ActionListener{
         
         public OrderPanel()
         {
+            this.setLayout(new BorderLayout());
             JPanel header = new JPanel();       
             header.add(new JLabel("Users:"));
             add(header, BorderLayout.NORTH);
@@ -223,10 +227,48 @@ public class ClientPanel extends JApplet implements ActionListener{
                 data[i][1] = o.getPID();
                 data[i][2] = o.getQuantity();  
             }
-                table = new JTable(data, columnNames); 
-                table.getTableHeader().setReorderingAllowed(false);
-                JScrollPane scrollPane = new JScrollPane(table);   
-                this.add(scrollPane);
+            table = new JTable(data, columnNames); 
+            table.getTableHeader().setReorderingAllowed(false);
+            JScrollPane scrollPane = new JScrollPane(table);   
+            this.add(scrollPane, BorderLayout.CENTER);
+            
+            JPanel bottom = new JPanel();
+            bottom.add(new JLabel("Current balance:"));
+            curBalance = new JLabel(currentUser.getBalance().toString());
+            bottom.add(curBalance);
+            bottom.add(new JLabel("Deposit money:"));
+            bottom.add(amount);
+            bottom.add(deposit);
+            add(bottom, BorderLayout.SOUTH);
+            
+            
+            deposit.addActionListener(this);
+            
+        }
+        
+        public void actionPerformed(ActionEvent e)
+        {
+            if (amount.getText() == null)
+            {
+                JOptionPane.showMessageDialog(null, "Enter corrent amount!");
+                return;
+            }
+            double newAmount = Double.parseDouble(amount.getText());
+            if (newAmount <=0)
+            {
+                JOptionPane.showMessageDialog(null, "Amount can't be negative");
+                return;
+            }
+                
+            currentUser.depositFunds(newAmount);
+            JOptionPane.showMessageDialog(null, 
+                    "You succesfully deposited money!\n"+
+                    "Your new balance is: " + currentUser.getBalance());
+            
+            output.removeAll();
+            output.add(new OrderPanel());
+            output.revalidate();
+            output.repaint();
         }
     }
     
