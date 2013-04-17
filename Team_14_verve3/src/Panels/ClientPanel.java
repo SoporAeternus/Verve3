@@ -274,6 +274,7 @@ public class ClientPanel extends JApplet implements ActionListener{
                     data[i][2] = m.getArtist();
                     data[i][3] = m.getRating();
                     data[i][4] = m.getPrice();
+                    data[i][5] = 0;
                 }
                 table = new JTable(data, columnNames); 
                 table.getTableHeader().setReorderingAllowed(false);
@@ -283,7 +284,18 @@ public class ClientPanel extends JApplet implements ActionListener{
             if(type.equals("DVD"))
             {
                 String[] columnNames = {"PID","Title","Director","Rating","Price","Quantity"};
-                Object[][] data = {};
+                N = Database.DVDList.size();
+                data = new Object[N][6];
+                for(int i = 0;i<N;i++)
+                {
+                    DVD m = Database.DVDList.get(i);
+                    data[i][0] = m.getProductID();
+                    data[i][1] = m.getTitle();
+                    data[i][2] = m.getDirector();
+                    data[i][3] = m.getRating();
+                    data[i][4] = m.getPrice();
+                    data[i][5] = 0;
+                }
                 table = new JTable(data, columnNames); 
                 table.getTableHeader().setReorderingAllowed(false);
                 JScrollPane scrollPane = new JScrollPane(table);   
@@ -291,8 +303,19 @@ public class ClientPanel extends JApplet implements ActionListener{
             }
             if(type.equals("Book"))
             {
-                String[] columnNames = {"PID","Title","Arthor","Rating","Price","Quantity"};
-                Object[][] data = {};
+                String[] columnNames = {"PID","Title","Author","Rating","Price","Quantity"};
+                N = Database.bookList.size();
+                data = new Object[N][6];
+                for(int i = 0;i<N;i++)
+                {
+                    Book m = Database.bookList.get(i);
+                    data[i][0] = m.getProductID();
+                    data[i][1] = m.getTitle();
+                    data[i][2] = m.getAuthor();
+                    data[i][3] = m.getRating();
+                    data[i][4] = m.getPrice();
+                    data[i][5] = 0;
+                }
                 table = new JTable(data, columnNames); 
                 table.getTableHeader().setReorderingAllowed(false);
                 JScrollPane scrollPane = new JScrollPane(table);   
@@ -310,7 +333,7 @@ public class ClientPanel extends JApplet implements ActionListener{
             {
                  for(int i = 0; i < N;i++)
                 {
-                    System.out.println(i+((String)data[i][5]));
+                   System.out.println(i+((String)data[i][5]));
                    String q = table.getModel().getValueAt(i, 5).toString();
                    Double p = (Double)data[i][4];
                    System.out.println(q+ " "+p);
