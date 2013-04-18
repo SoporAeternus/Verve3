@@ -248,9 +248,9 @@ public class ClientPanel extends JApplet implements ActionListener{
         
         public void actionPerformed(ActionEvent e)
         {
-            if (amount.getText() == null)
+            if (amount.getText().equals(""))
             {
-                JOptionPane.showMessageDialog(null, "Enter corrent amount!");
+                JOptionPane.showMessageDialog(null, "Enter an amount!");
                 return;
             }
             double newAmount = Double.parseDouble(amount.getText());
