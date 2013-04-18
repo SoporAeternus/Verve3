@@ -1,9 +1,17 @@
 package Database;
 import Products.Order;
 import Accounts.*;
+import Panels.ClientPanel;
+import Panels.ManagerPanel;
 import Products.*;
 import java.util.*;
 import java.io.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+import team_14_verve3.UserNameValidation;
 
 
 /**
@@ -27,51 +35,80 @@ public class Database{
     public static Vector<Book> bookList = new Vector<Book>();     // Array of Books at verve3
     public static Vector<Account> AccountList = new Vector<Account>();
     public static Vector<Order> Orders = new Vector<Order>();
-    public static void preload() throws Exception
+    private static Connection myConnection;
+    public static void preload()
     {
-    	Scanner in;
-    	// load music
-    	in = new Scanner(new File("src\\Database\\Music.txt"));
-    	while(in.hasNext())
-    	{
-    		String tmp = in.nextLine();
-    		String[] newMusic = tmp.split("/");
-    		musicList.add(new Music(newMusic));
-    	}
-
-    	// load book
-    	in = new Scanner(new File("src\\Database\\Book.txt"));
-    	while(in.hasNext())
-    	{
-    		String tmp = in.nextLine();
-    		String[] newBook = tmp.split("/");
-    		bookList.add(new Book(newBook));
-    	}
-
-    	// load DVD
-    	in = new Scanner(new File("src\\Database\\DVD.txt"));
-    	while(in.hasNext())
-    	{
-    		String tmp = in.nextLine();
-    		String[] newDVD = tmp.split("/");
-    		DVDList.add(new DVD(newDVD));
-    	}
-
-    	// load Accounts
-    	in = new Scanner(new File("src\\Database\\Accounts.txt"));
-    	while(in.hasNext())
-    	{
-    		String tmp = in.nextLine();
-    		String[] newUser = tmp.split("/");
-                if(newUser[0].equals("M"))
+          try
+            {
+                String currDir = System.getProperty("user.dir");
+                String dir = currDir.replace("\\","/");
+                dir += "/src/Database/VERVE3";
+                System.out.println(dir);
+                myConnection = DriverManager.getConnection("jdbc:derby://localhost:1527/"+dir,"root","root");
+                load("ACCOUNTS");
+                myConnection.close();
+            }
+            catch(Exception exception){
+                
+                JOptionPane.showMessageDialog(null, "Error occured when trying to connect to database\nPlease check your connection."
+                        + "\nError Code: "+exception.getMessage());
+            }
+    }
+    
+    public static void load(String type)
+    {
+        try
+        {
+            String testQuery;
+            Statement stmt;
+            ResultSet results;
+            testQuery = "select * from ROOT."+type;
+            stmt = myConnection.createStatement();
+            results = stmt.executeQuery(testQuery);
+            if(type.equals("ACCOUNTS"))
+            {
+                while(results.next())
                 {
-                    AccountList.add(new Manager(newUser));
+
+                    String accountType = results.getString("ACCOUNT_TYPE");
+                    if(accountType.equals("M"))
+                    {
+                        Manager m = new Manager();
+                        m.setAccountType(accountType);
+                        m.setUserName(results.getString("USERNAME")); 
+                        m.setPassword(results.getString("PASSWORD"));
+                        m.setName(results.getString("NAME"));
+                        m.setAddress(results.getString("NAME"));
+                        int Y = results.getDate("DOB").getYear();
+                        int M = results.getDate("DOB").getMonth();
+                        int D = results.getDate("DOB").getDay();
+                        m.setDOB(new Date(Y,M,D));
+                        AccountList.add(m);
+                    }
+                    if(accountType.equals("C"))
+                    {
+                        Client c = new Client();
+                        c.setAccountType(accountType);
+                        c.setUserName(results.getString("USERNAME")); 
+                        c.setPassword(results.getString("PASSWORD"));
+                        c.setName(results.getString("NAME"));
+                        c.setAddress(results.getString("NAME"));
+                        int Y = results.getDate("DOB").getYear();
+                        int M = results.getDate("DOB").getMonth();
+                        int D = results.getDate("DOB").getDay();
+                        c.setDOB(new Date(Y,M,D));
+                        c.setBalance(results.getDouble("BALANCE"));
+                        AccountList.add(c);
+                    }
                 }
-                if(newUser[0].equals("C"))
-                {
-                    AccountList.add(new Client(newUser));
-                }
-    	}
+            }
+            results.close();
+            stmt.close();
+        }
+        catch(Exception ex)
+        {
+            JOptionPane.showMessageDialog(null, "Error occured when trying to load" +type+" database\nPlease check your connection.");
+        }
     }
     
     public static boolean addMusic()
@@ -88,10 +125,5 @@ public class Database{
     {
         boolean result = true;
         return result;
-    }
-    
-    public static void update()
-    {
-        
     }
 }

@@ -27,34 +27,17 @@ public class Client extends Account
         super();
         BALANCE = 0.0;
     }
-    
-    public Client(String[] user)
-    {
-        super(user);
-        BALANCE = Double.parseDouble(user[8]);
-    }
 
+    public void setBalance(double balance)
+    {
+        this.BALANCE = balance;
+    }
+    
     public Double getBalance()
     {
         return BALANCE;
     }
-    // will be implemented in the GUI phase
-    @Override
-    public void panel() {
-        // Client has own panel
-        // to be implemented using GUI
-    }
-/*
-    public ShoppingCart getShoppingCart() {
-        // POST: returns the items in the Shopping cart that the user has added on
-        return this.clientCart;
-    }
 
-    public Billing getBillingInfo() {
-        // POST: returns the billing info of the Client
-        return this.billingInfo;
-    }
-*/
     /**
      * Deposit Funds into the Client Account
      *

@@ -120,7 +120,7 @@ public class SignUpPanel extends JPanel implements ActionListener, KeyListener {
             Client newClient = new Client();
             newClient.setName(name);
             newClient.setPassword(password);
-            newClient.setUserName(newUsername);
+            newClient.setUserName(newUsername.getUserName());
             newClient.setAddress(address);
             Database.AccountList.add(newClient);
             JOptionPane.showMessageDialog(null, "Congratulations, You can now Log In");

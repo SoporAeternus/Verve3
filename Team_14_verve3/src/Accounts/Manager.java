@@ -33,11 +33,7 @@ public class Manager extends Account {
     {
         super();
     }
-    
-    public Manager(String[] user)
-    {
-        super(user);
-    }
+   
 /*
     public void AddContent(String itemKind, String titleOfItem) {
         boolean isValid = isItemKindValid(itemKind);
@@ -82,27 +78,5 @@ public class Manager extends Account {
             }
         }
         return false;
-    }
-/*
-    public void retrieveCustomerInformation(String userNameSearch) {
-        String testString;
-        for (int i = 0; i < Database.clientList.length; i++) {
-            if (Database.clientList[i] == null) {
-                System.out.print("No such Client User Name Exists");
-                break;
-            } else {
-                testString = Database.clientList[i].getUserName();
-                if (testString.equals(userNameSearch)) {
-                    System.out.println("Username " + userNameSearch + " is found:");
-                    System.out.println(Database.clientList[i].toString());
-                }
-            }
-        }
-    }*/
-
-    // will be implemented in the GUI phase
-    @Override
-    public void panel() {
-        // Manager has own panel
     }
 }
