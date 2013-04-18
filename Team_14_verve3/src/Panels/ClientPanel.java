@@ -384,7 +384,6 @@ public class ClientPanel extends JApplet implements ActionListener{
             {
                  for(int i = 0; i < N;i++)
                 {
-                   System.out.println(i+((String)data[i][5]));
                    String q = table.getModel().getValueAt(i, 5).toString();
                    Double p = (Double)data[i][4];
                    System.out.println(q+ " "+p);

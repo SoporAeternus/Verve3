@@ -56,6 +56,16 @@ public abstract class Item {
         int ID = (int) (r * 100000);
         return "" + ID;
     }
+    
+    public void setRating(double newRating)
+    {
+        this.RATING = newRating;
+    }
+    
+    public void setPID(String pid)
+    {
+        PRODUCT_ID = pid;
+    }
 
     /**
      * Check to see if an product ID already exists [error catching incase a

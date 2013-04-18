@@ -47,6 +47,7 @@ public class Database{
                 System.out.println(dir);
                 myConnection = DriverManager.getConnection("jdbc:derby://localhost:1527/"+dir,"root","root");
                 load("ACCOUNTS");
+                load("MUSIC");
                 myConnection.close();
             }
             catch(Exception exception){
@@ -66,6 +67,20 @@ public class Database{
             loadQuery = "select * from ROOT."+type;
             stmt = myConnection.createStatement();
             results = stmt.executeQuery(loadQuery);
+            if(type.equals("MUSIC"))
+            {
+                 while(results.next())
+                {
+
+                    Music m = new Music();
+                    m.setPID(results.getString("PID"));
+                    m.setTitle(results.getString("TITLE")); 
+                    m.setArtist(results.getString("ARTIST"));
+                    m.setRating(results.getDouble("RATING"));
+                    m.setPrice(results.getDouble("PRICE"));
+                    musicList.add(m);
+                }
+            }
             if(type.equals("ACCOUNTS"))
             {
                 while(results.next())
@@ -108,7 +123,8 @@ public class Database{
         }
         catch(Exception ex)
         {
-            JOptionPane.showMessageDialog(null, "Error occured when trying to load" +type+" database\nPlease check your connection.");
+            JOptionPane.showMessageDialog(null, "Error occured when trying to load " +type+" database\nPlease check your connection.\n"
+                    +ex.getMessage());
         }
     }
     
@@ -117,6 +133,7 @@ public class Database{
         try
         {
             boolean found = false;
+            musicList.add(newMusic);
             String addQuery;
             String currDir = System.getProperty("user.dir");
             String dir = currDir.replace("\\","/");
