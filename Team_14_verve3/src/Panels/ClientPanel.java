@@ -253,10 +253,19 @@ public class ClientPanel extends JApplet implements ActionListener{
                 JOptionPane.showMessageDialog(null, "Enter an amount!");
                 return;
             }
-            double newAmount = Double.parseDouble(amount.getText());
+            try
+            {
+                Double.parseDouble(amount.getText());
+            }
+            catch(NumberFormatException nfe)
+            {
+                JOptionPane.showMessageDialog(null, "Amount is incorrect!");
+                return;
+            }
+            double newAmount = Double.parseDouble(amount.getText());    
             if (newAmount <=0)
             {
-                JOptionPane.showMessageDialog(null, "Amount can't be negative");
+                JOptionPane.showMessageDialog(null, "Amount can't be zero or negative");
                 return;
             }
                 
