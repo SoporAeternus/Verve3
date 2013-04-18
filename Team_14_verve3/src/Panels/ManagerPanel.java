@@ -411,15 +411,20 @@ public class ManagerPanel extends JPanel implements ActionListener, ItemListener
                 newBook.setTitle(title.getText());
                 newBook.setAuthor(author.getText());
                 newBook.setPrice(Double.parseDouble(price.getText()));
-                Database.bookList.add(newBook);
-                
-                JOptionPane.showMessageDialog(null, "You succesfully added a new Book!");
-                productID.setText(Item.generateID());
-                title.setText("");
-                producer.setText("");
-                artist.setText("");
-                author.setText("");
-                price.setText("");
+                if(Database.addBook(newBook))
+                {
+                    JOptionPane.showMessageDialog(null, "You succesfully added a new Book!");
+                    productID.setText(Item.generateID());
+                    title.setText("");
+                    producer.setText("");
+                    artist.setText("");
+                    author.setText("");
+                    price.setText("");
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "Item Exists");
+                }
             }
             
             if (chosenType.equals("DVD"))
@@ -428,14 +433,22 @@ public class ManagerPanel extends JPanel implements ActionListener, ItemListener
                 newDVD.setTitle(title.getText());
                 newDVD.setProducer(producer.getText());
                 newDVD.setPrice(Double.parseDouble(price.getText()));
-                Database.DVDList.add(newDVD);
-                JOptionPane.showMessageDialog(null, "You succesfully added a new DVD!");
-                productID.setText(Item.generateID());
-                title.setText("");
-                producer.setText("");
-                artist.setText("");
-                author.setText("");
-                price.setText("");
+
+                if( Database.addDVD(newDVD))
+                {
+                    JOptionPane.showMessageDialog(null, "You succesfully added a new DVD!");
+                    productID.setText(Item.generateID());
+                    title.setText("");
+                    producer.setText("");
+                    artist.setText("");
+                    author.setText("");
+                    price.setText("");
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "Item Exists");
+                }
+                
             }
             
             if (chosenType.equals("Music"))
@@ -445,15 +458,20 @@ public class ManagerPanel extends JPanel implements ActionListener, ItemListener
                 newMusic.setTitle(title.getText());
                 newMusic.setArtist(artist.getText());
                 newMusic.setPrice(Double.parseDouble(price.getText()));
-                Database.musicList.add(newMusic);
-                
-                JOptionPane.showMessageDialog(null, "You succesfully added a new Music!");
-                productID.setText(Item.generateID());
-                title.setText("");
-                producer.setText("");
-                artist.setText("");
-                author.setText("");
-                price.setText("");
+                if(Database.addMusic(newMusic))
+                {
+                    JOptionPane.showMessageDialog(null, "You succesfully added a new Music!");
+                    productID.setText(Item.generateID());
+                    title.setText("");
+                    producer.setText("");
+                    artist.setText("");
+                    author.setText("");
+                    price.setText("");
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "Item Exists");
+                }
             }
         }
         

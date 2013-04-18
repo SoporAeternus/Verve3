@@ -8,6 +8,7 @@ import java.util.*;
 import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
@@ -59,12 +60,12 @@ public class Database{
     {
         try
         {
-            String testQuery;
+            String loadQuery;
             Statement stmt;
             ResultSet results;
-            testQuery = "select * from ROOT."+type;
+            loadQuery = "select * from ROOT."+type;
             stmt = myConnection.createStatement();
-            results = stmt.executeQuery(testQuery);
+            results = stmt.executeQuery(loadQuery);
             if(type.equals("ACCOUNTS"))
             {
                 while(results.next())
@@ -111,19 +112,43 @@ public class Database{
         }
     }
     
-    public static boolean addMusic()
+    public static boolean addMusic(Music newMusic)
     {
-        boolean result = true;
-        return result;
+        try
+        {
+            boolean found = false;
+            String addQuery;
+            String currDir = System.getProperty("user.dir");
+            String dir = currDir.replace("\\","/");
+            dir += "/src/Database/VERVE3";
+            myConnection = DriverManager.getConnection("jdbc:derby://localhost:1527/"+dir,"root","root");
+            PreparedStatement statement = myConnection.prepareStatement("INSERT INTO ROOT.MUSIC (PID, TITLE,ARTIST,RATING,PRICE) VALUES (?,?,?,?,?)");
+            statement.setString(1, newMusic.getProductID());
+            statement.setString(2, newMusic.getTitle());
+            statement.setString(3, newMusic.getArtist());
+            statement.setDouble(4,newMusic.getRating());
+            statement.setDouble(5, newMusic.getPrice());
+            statement.execute();
+            statement.close();
+            myConnection.close();
+            return true;
+        }
+        catch(Exception ex)
+        {
+             JOptionPane.showMessageDialog(null, "Error occured when trying to add the new item."
+                        + "\nError Message: "+ex.getMessage());
+             return false;
+        }
     }
-    public static boolean addDVD()
+    
+    public static boolean addDVD(DVD newDVD)
     {
         boolean result = true;
-        return result;
+        return true;
     }
-    public static boolean addBook()
+    public static boolean addBook(Book newBook)
     {
         boolean result = true;
-        return result;
+        return true;
     }
 }
