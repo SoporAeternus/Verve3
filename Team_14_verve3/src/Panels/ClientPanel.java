@@ -39,7 +39,8 @@ public class ClientPanel extends JApplet implements ActionListener {
     private GridBagConstraints constraints;
     private ProductPanel productPanel;
     private OrderPanel orderPanel;
-    
+    private ShoppingCartPanel shoppingCart;
+
     public ClientPanel(Client client) {
         currentUser = client;
         welcomeLabel = new JLabel("Welcome "
@@ -194,18 +195,54 @@ public class ClientPanel extends JApplet implements ActionListener {
 
         output.add(new ProductPanel());
     }
-    /*
-    public class ShoppingCartPanel extends JPanel implements ActionListener{
+
+    public class ShoppingCartPanel extends JPanel implements TableModelListener {
+
         private JTable table;
         private Object[][] data;
         private String[] columnNames;
-        
-        public ShoppingCartPanel(){
+        private ProductPanel productPanel;
+        private int Temp;
+        private ShoppingCart tempOrder = new ShoppingCart();
+
+        public ShoppingCartPanel() {
             this.setLayout(new BorderLayout());
-            
+            table = new JTable();
+            table = new JTable(new DefaultTableModel());
+            table.getModel().addTableModelListener(this);
+            JPanel header = new JPanel();
+            add(header, BorderLayout.NORTH);
+        }
+
+        void displayCart() {
+            productPanel = new ProductPanel();
+            tempOrder = productPanel.getCart();
+            Temp = tempOrder.cartSize();
+
+            String[] columnNames = {"PID", "Title", "Quantity"};
+            data = new Object[Temp][3];
+            for (int i = 0; i < Temp; i++) {
+                data[i][0] = tempOrder.getShoppingCart().get(i).getPID();
+                data[i][1] = tempOrder.getShoppingCart().get(i).getName();
+                data[i][2] = tempOrder.getShoppingCart().get(i).getQuantity();
+
+            }
+            table = new JTable(data, columnNames);
+            table.getTableHeader().setReorderingAllowed(false);
+            JScrollPane scrollPane = new JScrollPane(table);
+            this.add(scrollPane);
+        }
+
+        @Override
+        public void tableChanged(TableModelEvent e) {
+            int row = e.getFirstRow();
+            int column = e.getColumn();
+            TableModel model = (TableModel) e.getSource();
+            String columnName = model.getColumnName(column);
+            Object data = model.getValueAt(row, column);
+            System.out.println(columnName);
         }
     }
-    */
 
     public class OrderPanel extends JPanel implements ActionListener {
 
@@ -369,17 +406,6 @@ public class ClientPanel extends JApplet implements ActionListener {
             double totalPrice = 0;
             if (data.length == 0) {
                 JOptionPane.showMessageDialog(null, "There is nothing selected here");
-<<<<<<< HEAD
-            }
-            else
-            {
-                 for(int i = 0; i < N;i++)
-                {
-                   String q = table.getModel().getValueAt(i, 5).toString();
-                   Double p = (Double)data[i][4];
-                   System.out.println(q+ " "+p);
-                   totalPrice += p*Integer.parseInt(q);
-=======
             } else {
                 for (int i = 0; i < N; i++) {
                     System.out.println(i + ((String) data[i][5]));
@@ -387,7 +413,6 @@ public class ClientPanel extends JApplet implements ActionListener {
                     Double p = (Double) data[i][4];
                     System.out.println(q + " " + p);
                     totalPrice += p * Integer.parseInt(q);
->>>>>>> Shopping Cart
                 }
                 if (totalPrice > currentUser.getBalance()) {
                     JOptionPane.showMessageDialog(null, "Insufficient Balance\n"
@@ -423,29 +448,16 @@ public class ClientPanel extends JApplet implements ActionListener {
                 }
             }
         }
-        
-        void displayCart(){
-            Temp = tempOrder.cartSize();
-            
-                String[] columnNames = {"PID", "Title", "Quantity"};
-                temp_data = new Object[Temp][3];
-                for (int i = 0; i < Temp; i++) {
-                    temp_data[i][0] = tempOrder.getShoppingCart().get(i).getPID();
-                    temp_data[i][1] = tempOrder.getShoppingCart().get(i).getName();
-                    temp_data[i][2] = tempOrder.getShoppingCart().get(i).getQuantity();
-                    
-                }
-                table = new JTable(temp_data, columnNames);
-                table.getTableHeader().setReorderingAllowed(false);
-                JScrollPane scrollPane = new JScrollPane(table);
-                this.add(scrollPane);
+
+        ShoppingCart getCart() {
+            return tempOrder;
         }
-        
-        void reset(){
-            for (int i = 0; i < N; i++){
-                data [i][5] = 0;
+
+        void reset() {
+            for (int i = 0; i < N; i++) {
+                data[i][5] = 0;
             }
-            
+
         }
 
         @Override
@@ -490,8 +502,8 @@ public class ClientPanel extends JApplet implements ActionListener {
         }
 
         if (e.getSource() == cart) {
-            
-            productPanel.displayCart();
+            productPanel.getCart();
+            shoppingCart.displayCart();
             output.add(cartPanel);
             output.revalidate();
             output.repaint();

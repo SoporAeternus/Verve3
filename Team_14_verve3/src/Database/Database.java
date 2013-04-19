@@ -39,7 +39,6 @@ public class Database{
     private static Connection myConnection;
     public static void preload()
     {
-<<<<<<< HEAD
           try
             {
                 String currDir = System.getProperty("user.dir");
@@ -71,43 +70,6 @@ public class Database{
             if(type.equals("MUSIC"))
             {
                  while(results.next())
-=======
-    	Scanner in;
-    	// load music
-    	in = new Scanner(new File("src/Database/Music.txt"));
-    	while(in.hasNext())
-    	{
-    		String tmp = in.nextLine();
-    		String[] newMusic = tmp.split("/");
-    		musicList.add(new Music(newMusic));
-    	}
-
-    	// load book
-    	in = new Scanner(new File("src/Database/Book.txt"));
-    	while(in.hasNext())
-    	{
-    		String tmp = in.nextLine();
-    		String[] newBook = tmp.split("/");
-    		bookList.add(new Book(newBook));
-    	}
-
-    	// load DVD
-    	in = new Scanner(new File("src/Database/DVD.txt"));
-    	while(in.hasNext())
-    	{
-    		String tmp = in.nextLine();
-    		String[] newDVD = tmp.split("/");
-    		DVDList.add(new DVD(newDVD));
-    	}
-
-    	// load Accounts
-    	in = new Scanner(new File("src/Database/Accounts.txt"));
-    	while(in.hasNext())
-    	{
-    		String tmp = in.nextLine();
-    		String[] newUser = tmp.split("/");
-                if(newUser[0].equals("M"))
->>>>>>> Shopping Cart
                 {
 
                     Music m = new Music();
