@@ -23,11 +23,11 @@ public class ShoppingCart {
     public static final int ONE = 1;            // used so hardcoding is avoided and for security reasons
     public static final int ZERO = 0;           // used so hardcoding is avoided and for security reasons
     // first parameter corresponds to productID, 2nd paramater - quantity
-    private Hashtable<String, Integer> shoppingCart;
+    private Vector<Order> shoppingCart;
     
     // Default Constructor
     public ShoppingCart() {
-        shoppingCart = new Hashtable<String, Integer>();
+        shoppingCart = new Vector<Order>();
     }
 
     /**
@@ -35,10 +35,10 @@ public class ShoppingCart {
      *
      * @param itemID type string- will be the key in the HashTable
      */
-    public void addItemToCart(String itemID,int Quantity) {
+    public void addItemToCart(String itemID, String Title,int Quantity) {
         // adds certain item using itemID
         // PRE: itemID to be correct
-        shoppingCart.put(itemID, Quantity);
+        shoppingCart.add(new Order(itemID, Title, Quantity));
     }
 
     /**
@@ -46,6 +46,7 @@ public class ShoppingCart {
      *
      * @param itemID type string- will be the key in the HashTable
      */
+    /*
     public int getItem(String itemID) {
         if (shoppingCart.containsKey(itemID)) {
             return shoppingCart.get(itemID);
@@ -53,6 +54,7 @@ public class ShoppingCart {
             return ZERO;
         }
     }
+    */
 
     /**
      * Delete Item from Shopping Cart
@@ -84,7 +86,7 @@ public class ShoppingCart {
         shoppingCart.clear();
     }
 
-    public Hashtable<String, Integer> getShoppingCart() {
+    public Vector<Order> getShoppingCart() {
         // POST: accessor function returns the shopping Cart
         return shoppingCart;
     }
