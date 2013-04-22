@@ -1,7 +1,9 @@
 package team_14_verve3;
 
+import Database.Database;
 import java.util.*;
 import Products.*;
+import javax.swing.JOptionPane;
 
 /**
  * Name: Alikhan Amandyk, Varun Patel, Di Wang Section: [Alikhan and Varun -
@@ -24,9 +26,12 @@ public class ShoppingCart {
     public static final int ZERO = 0;           // used so hardcoding is avoided and for security reasons
     // first parameter corresponds to productID, 2nd paramater - quantity
     private Vector<Order> shoppingCart;
+    private double total_price = 0;
+    
     
     // Default Constructor
-    public ShoppingCart() {
+    public ShoppingCart() 
+    {
         shoppingCart = new Vector<Order>();
     }
 
@@ -35,33 +40,25 @@ public class ShoppingCart {
      *
      * @param itemID type string- will be the key in the HashTable
      */
-    public void addItemToCart(String itemID, String Title,int Quantity) {
+    public void addItemToCart(String name,String itemID, String Title,int Quantity,double Price) {
         // adds certain item using itemID
         // PRE: itemID to be correct
-        shoppingCart.add(new Order(itemID, Title, Quantity));
+        shoppingCart.add(new Order(name,itemID, Title, Quantity,Price));
+        total_price += (Price*Quantity);
     }
 
-    /**
-     * Retrieve item from shopping Cart using the Key (will output quantity)
-     *
-     * @param itemID type string- will be the key in the HashTable
-     */
-    /*
-    public int getItem(String itemID) {
-        if (shoppingCart.containsKey(itemID)) {
-            return shoppingCart.get(itemID);
-        } else {
-            return ZERO;
-        }
+    public double getTotalPrice()
+    {
+        return total_price;
     }
-    */
-
+    
     /**
      * Delete Item from Shopping Cart
      *
      * @param itemID type string- will be the key in the HashTable.
      */
-    public void deleteItemFromCart(String itemID) {
+    public void deleteItemFromCart(String itemID) 
+    {
         shoppingCart.remove(itemID);
     }
 
@@ -79,6 +76,15 @@ public class ShoppingCart {
         return shoppingCart.size();
     }
 
+    public int itemNumber()
+    {
+        int num = 0;
+        for(Order o: shoppingCart)
+        {
+            num += o.getQuantity();
+        }
+        return num;
+    }
     /**
      * Clear the cart
      */
@@ -86,8 +92,23 @@ public class ShoppingCart {
         shoppingCart.clear();
     }
 
-    public Vector<Order> getShoppingCart() {
+    public Order getOrder(int i) {
         // POST: accessor function returns the shopping Cart
-        return shoppingCart;
+        return shoppingCart.get(i);
+    }
+    
+    public void saveToDatabase()
+    {
+        for(Order o: shoppingCart)
+        {
+            Database.addOrder(o);
+        }
+        clear();
+    }
+    
+    public void clear()
+    {
+        shoppingCart = new Vector<Order>();
+        total_price = 0;
     }
 }

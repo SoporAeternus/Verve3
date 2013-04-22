@@ -234,7 +234,7 @@ public class ManagerPanel extends JPanel implements ActionListener, ItemListener
         authorPanel.add(author);
         
         JPanel producerPanel = new JPanel();
-        producerPanel.add(new JLabel(" Producer:"));
+        producerPanel.add(new JLabel(" Director:"));
         producerPanel.add(producer);
         
         JPanel artistPanel = new JPanel();
@@ -311,23 +311,27 @@ public class ManagerPanel extends JPanel implements ActionListener, ItemListener
         
         public OrderPanel()
         {
-            JPanel header = new JPanel();       
-            header.add(new JLabel("Users:"));
+            this.setLayout(new BorderLayout());
+            JPanel header = new JPanel();
+            header.add(new JLabel("Orders:       "));
+            header.add(new JLabel("<html>Total Sale:   $ <font color='red'>"+Database.getSale()+" </font></html>"));
             add(header, BorderLayout.NORTH);
-            String[] columnNames = {"Client Name","Item ID","Quantity"};
-            int N = Database.Orders.size();
-            Object[][] data = new Object[N][3];
-            for(int i = 0;i<N;i++)
-            {
-                Order o = Database.Orders.get(i);
+            String[] columnNames = {"Customer Name","Item ID","Title","Unit Price", "Quantity","Total Price"};
+            int N = Database.AllOrders.size();
+            Object[][] data = new Object[N][6];
+            for (int i = 0; i < N; i++) {
+                Order o = Database.AllOrders.get(i);
                 data[i][0] = o.getName();
                 data[i][1] = o.getPID();
-                data[i][2] = o.getQuantity();  
+                data[i][2] = o.getTitle();
+                data[i][3] = o.getPrice();
+                data[i][4] = o.getQuantity();
+                data[i][5] = o.getPrice()*o.getQuantity();
             }
-                table = new JTable(data, columnNames); 
-                table.getTableHeader().setReorderingAllowed(false);
-                JScrollPane scrollPane = new JScrollPane(table);   
-                this.add(scrollPane);
+            table = new JTable(data, columnNames);
+            table.getTableHeader().setReorderingAllowed(false);
+            JScrollPane scrollPane = new JScrollPane(table);
+            this.add(scrollPane, BorderLayout.CENTER);
         }
     }
     
@@ -431,7 +435,7 @@ public class ManagerPanel extends JPanel implements ActionListener, ItemListener
             {        
                 DVD newDVD= new DVD();
                 newDVD.setTitle(title.getText());
-                newDVD.setProducer(producer.getText());
+                newDVD.setDirector(producer.getText());
                 newDVD.setPrice(Double.parseDouble(price.getText()));
 
                 if( Database.addDVD(newDVD))

@@ -85,11 +85,13 @@ public class StartPanel extends JPanel implements ActionListener, KeyListener {
                             found = true;
                             if(user.getAccountType().equals("M"))
                             {
+                                Database.loadOrders("");
                                 application.setVisible(false);
                                 ManagerPanel.main(args,user);
                             }
                             else
                             {
+                                Database.loadOrders(username);
                                 application.setVisible(false);
                                 ClientPanel.main(args,(Client)user);
                             }
